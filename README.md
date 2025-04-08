@@ -47,6 +47,38 @@ Had to install below for windows:
   - Used this URL as a reference to add environment variables in Terraform cloud workspace: https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-remote
   - Was giving some path error after using cloud as a backend for azure. Replaced cloud with a proper terraform {backend {} }. block.
   - updated terraform version to ~> 1.6.0 under workspace settings -> General -> Terraform version. It was 1.11.3 before. 
+10. Copy over ssh keys created in step 1 from windows to linux. 
+  - change permissions on ssh public and private key files in windows via powershell.
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi /inheritance:r`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi /grant:r "shant:F"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi /remove "Users" "Authenticated Users" "Everyone"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi.pub /inheritance:r`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi.pub /grant:r "shant:F"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_lipi.pub /remove "Users" "Authenticated Users" "Everyone"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc /inheritance:r`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc /grant:r "shant:F"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc /remove "Users" "Authenticated Users" "Everyone"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc.pub /inheritance:r`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc.pub /grant:r "shant:F"`
+    - `icacls C:\Users\shant\.ssh\id_ed25519_wnc.pub /remove "Users" "Authenticated Users" "Everyone"`
+    - check grants syntax: 
+      - `icacls <public or private key file path>`
+      - example: `icacls C:\Users\shant\.ssh\id_ed25519_lipi`
+  - copy those files over to wsl
+    - `cp /mnt/c/Users/shant/.ssh/id_ed25519_lipi ~/.ssh/`
+    - `cp /mnt/c/Users/shant/.ssh/id_ed25519_lipi.pub ~/.ssh/`
+    - `cp /mnt/c/Users/shant/.ssh/id_ed25519_wnc ~/.ssh/`
+    - `cp /mnt/c/Users/shant/.ssh/id_ed25519_wnc.pub ~/.ssh/`
+  - change permissions on ssh private and public key files in wsl.
+    - `chmod 600 ~/.ssh/id_ed25519_lipi`
+    - `chmod 644 ~/.ssh/id_ed25519_lipi.pub`
+    - `chmod 600 ~/.ssh/id_ed25519_wnc`
+    - `chmod 644 ~/.ssh/id_ed25519_wnc.pub `
+    - Verify Permissions: `ls -ahl ~/.ssh/`  
+  - created a `load-keys.sh` file in `~/.ssh/` folder.
+  - Updated bashrc to source this file whenever a new wsl terminal is opened.
+  - updated bash_profile file to source bashrc each time a new wsl is opened. 
+  - git push worked
 
 
 
