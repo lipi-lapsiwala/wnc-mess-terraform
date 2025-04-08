@@ -13,6 +13,7 @@ provider "azurerm" {
   features {}
 }
 
+# Define HCL Cloud as a backend for Azure
 terraform {
   backend "remote" {
     organization = "wnc-mess-terraform-backend"
