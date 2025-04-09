@@ -1,4 +1,4 @@
-resource "azurerm_windows_web_app" "app_service" {
+resource "azurerm_windows_web_app" "windows_app" {
   name                = var.windows_web_app_name
   location            = var.azure_location
   resource_group_name = var.azure_resource_group
@@ -8,6 +8,11 @@ resource "azurerm_windows_web_app" "app_service" {
   site_config {
     # When set to true, it keeps the app service running even when idle
     always_on = false
+    virtual_application {
+      physical_path = "site\\wwwroot"
+      preload       = false
+      virtual_path  = "/"
+    }
   }
 
   app_settings = {
