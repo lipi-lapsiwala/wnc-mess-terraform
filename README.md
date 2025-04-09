@@ -12,6 +12,13 @@ Had to install below for windows:
     - if this needs to be configured globally, --global flat would be used in the command above. 
     - But that will work only with one github account
   - connected local folder wnc-mess-terraform to remote repo wnc-mess-terraform
+    - have to copy the config file from windows to wsl .ssh folder. 
+    - set remote origin using ssh link not http link `git remote add origin git@github.com-lipi:lipi-lapsiwala/wnc-mess-terraform.git` # here github.com-lipi is the host name in configuration file for the ssh key associated with the corresponding github account.
+    - verify connection to the correct github account `ssh -T git@github.com-wnc`
+    - might have to create a main branch if it does not exist in local and if remote is using it. 
+    - `git push --set-upstream origin main`
+    - `git pull`
+    - push the changes
 2. Latest VSCode version was installed from microsoft store.
 3. Install wsl via microsoft store
 4. Install Install the WSL 2 kernel update manually
@@ -78,7 +85,31 @@ Had to install below for windows:
   - created a `load-keys.sh` file in `~/.ssh/` folder.
   - Updated bashrc to source this file whenever a new wsl terminal is opened.
   - updated bash_profile file to source bashrc each time a new wsl is opened. 
-  - git push worked
+  - git push worked.
+
+Problems:
+
+1. After restructuring evrything with environment and modules, I started receiving this error with terraform plan 
+```
+╷
+│ Error: Unreadable module directory
+│
+│ Unable to evaluate directory symlink: lstat ../../modules: no such file or
+│ directory
+╵
+
+╷
+│ Error: Unreadable module directory
+│
+│ The directory  could not be read for module "wnc_mess_app_service" at
+│ modules.tf:2.
+╵
+
+Operation failed: failed running terraform init (exit 1)
+```
+Resolution: As we are using Terraform cloud,by default it is set for “Remote” execution mode. It tries to run your Terraform code on its own servers, and those can't see your local file paths like ../../modules/app-service. Changing the Execution Mode to Local in `Terraform Cloud -> Settings (Workspace level) -> Execution Mode -> Select Local -> Save` resolved this issue.
+
+By switching the execution mode to Local, you're telling Terraform to run everything on your own WSL environment, which has access to the relative local module paths — exactly what you need for local module development. 
 
 
 
